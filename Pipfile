@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+secp256k1 = "*"
+
+[dev-packages]
+pytest = "*"
+black = "*"
+twine = "*"
+
+[scripts]
+test = "pytest"
+format = "black ."
+build = "python setup.py sdist"
+check = "twine check dist/*"
+upload = "twine upload dist/*"
