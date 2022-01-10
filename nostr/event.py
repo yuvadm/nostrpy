@@ -19,9 +19,9 @@ class Event:
         self.tags = tags or []
         self.content = content
         self.sig = 0
-        self.id = self.get_event_id()
 
-    def get_event_id(self):
+    @property
+    def id(self):
         data = [0, self.pubkey, self.created_at, self.kind, self.tags, self.content]
         jd = json.dumps(data).encode("utf-8")
         return hashlib.sha256(jd).hexdigest()
