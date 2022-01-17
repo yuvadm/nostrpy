@@ -168,3 +168,37 @@ def schnorr_verify(msg: bytes, pubkey: bytes, sig: bytes) -> bool:
         return False
     debug_print_vars()
     return True
+
+
+#
+# The following code is only used for debugging
+#
+import inspect
+
+
+def pretty(v: Any) -> Any:
+    if isinstance(v, bytes):
+        return "0x" + v.hex()
+    if isinstance(v, int):
+        return pretty(bytes_from_int(v))
+    if isinstance(v, tuple):
+        return tuple(map(pretty, v))
+    return v
+
+
+def debug_print_vars() -> None:
+    if DEBUG:
+        current_frame = inspect.currentframe()
+        assert current_frame is not None
+        frame = current_frame.f_back
+        assert frame is not None
+        print(
+            "   Variables in function ",
+            frame.f_code.co_name,
+            " at line ",
+            frame.f_lineno,
+            ":",
+            sep="",
+        )
+        for var_name, var_val in frame.f_locals.items():
+            print("   " + var_name.rjust(11, " "), "==", pretty(var_val))
