@@ -7,7 +7,7 @@ name = "pypi"
 
 [dev-packages]
 pytest = "*"
-black = "*"
+black = "==21.12b0"
 twine = "*"
 
 [scripts]
