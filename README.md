@@ -8,9 +8,17 @@ A python library and reference CLI tool implementing the [nostr](https://github.
 
 Supports Python 3.7 and up.
 
-## Dev
+## Usage
 
 ```bash
-$ pipenv sync -d
+$ pip install nostr
+```
+
+## Dev
+
+For development it's best to use `pipenv`:
+
+```bash
+$ pipenv install -d
 $ pipenv run test
 ```
