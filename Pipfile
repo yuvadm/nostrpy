@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-secp256k1 = "*"
 
 [dev-packages]
 pytest = "*"
