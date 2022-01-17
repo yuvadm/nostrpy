@@ -9,6 +9,9 @@ class EventKind(Enum):
     SET_METADATA = 0
     TEXT_NOTE = 1
     RECOMMEND_SERVER = 2
+    CONTACT_LIST = 3
+    ENCRYPTED_DIRECT_MESSAGE = 4
+    DELETION = 5
 
 
 class Event:
@@ -24,4 +27,5 @@ class Event:
     def id(self):
         data = [0, self.pubkey, self.created_at, self.kind, self.tags, self.content]
         jd = json.dumps(data).encode("utf-8")
+        print(jd)
         return hashlib.sha256(jd).hexdigest()
