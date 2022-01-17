@@ -1,17 +1,8 @@
-### Reference implementatoin copy pasta from https://github.com/bitcoin/bips/blob/02de475efc528058bd04a0c4ad31b6422aed5f5f/bip-0340/reference.py
+### Reference implementation copy pasta from https://github.com/bitcoin/bips/blob/02de475efc528058bd04a0c4ad31b6422aed5f5f/bip-0340/reference.py
 
 from typing import Tuple, Optional, Any
 import hashlib
 import binascii
-
-# Set DEBUG to True to get a detailed debug output including
-# intermediate values during key generation, signing, and
-# verification. This is implemented via calls to the
-# debug_print_vars() function.
-#
-# If you want to print values on an individual basis, use
-# the pretty() function, e.g., print(pretty(foo)).
-DEBUG = False
 
 p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
 n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
@@ -142,7 +133,6 @@ def schnorr_sign(msg: bytes, seckey: bytes, aux_rand: bytes) -> bytes:
         % n
     )
     sig = bytes_from_point(R) + bytes_from_int((k + e * d) % n)
-    debug_print_vars()
     if not schnorr_verify(msg, bytes_from_point(P), sig):
         raise RuntimeError("The created signature does not pass verification.")
     return sig
@@ -159,46 +149,9 @@ def schnorr_verify(msg: bytes, pubkey: bytes, sig: bytes) -> bool:
     r = int_from_bytes(sig[0:32])
     s = int_from_bytes(sig[32:64])
     if (P is None) or (r >= p) or (s >= n):
-        debug_print_vars()
         return False
     e = int_from_bytes(tagged_hash("BIP0340/challenge", sig[0:32] + pubkey + msg)) % n
     R = point_add(point_mul(G, s), point_mul(P, n - e))
     if (R is None) or (not has_even_y(R)) or (x(R) != r):
-        debug_print_vars()
         return False
-    debug_print_vars()
     return True
-
-
-#
-# The following code is only used for debugging
-#
-import inspect
-
-
-def pretty(v: Any) -> Any:
-    if isinstance(v, bytes):
-        return "0x" + v.hex()
-    if isinstance(v, int):
-        return pretty(bytes_from_int(v))
-    if isinstance(v, tuple):
-        return tuple(map(pretty, v))
-    return v
-
-
-def debug_print_vars() -> None:
-    if DEBUG:
-        current_frame = inspect.currentframe()
-        assert current_frame is not None
-        frame = current_frame.f_back
-        assert frame is not None
-        print(
-            "   Variables in function ",
-            frame.f_code.co_name,
-            " at line ",
-            frame.f_lineno,
-            ":",
-            sep="",
-        )
-        for var_name, var_val in frame.f_locals.items():
-            print("   " + var_name.rjust(11, " "), "==", pretty(var_val))
