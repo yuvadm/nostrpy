@@ -1,0 +1,2 @@
+def entry():
+    print("nostr")
